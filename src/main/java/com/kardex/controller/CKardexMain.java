@@ -132,10 +132,10 @@ public class CKardexMain {
 	}
 
 	/**
-	 * This method expose the end point that delete kardex by id.
+	 * Este método expone el endpoint para la eliminación del método por id.
 	 * 
-	 * @param KardexMainId id contain kardex to be deleted.
-	 * @return responseEntity response OK or Server Error.
+	 * @param KardexMainId id que contiene el kardex a ser eliminado.
+	 * @return responseEntity que response ok (200) o error de servidor (500).
 	 **/
 	@DeleteMapping("/kardex/{id}")
 	public ResponseEntity<?> deleteByIdKardexMain(@PathVariable(value = "id") Long KardexMainId) {
