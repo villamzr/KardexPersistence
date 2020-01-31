@@ -22,36 +22,42 @@ import com.kardex.repository.IKardexDetailsRepository;
 import com.kardex.utils.MapResponse;
 
 @RestController
-public class CKardexDetails {
+public class CKardexDetails
+{
 	@Autowired
 	IKardexDetailsRepository iKardexDetailsRepository;
 
 	/**
-	 * This method expose the end point that get all kardexDetails existing in
-	 * database.
+	 * Este método expone el endpoint que obtiene todos los KardexDetails existentes en base de datos
 	 * 
-	 * @return AllKardexMain return all KardexDetails main info mapped.
+	 * @return AllKardexMain retorna una lista de todos los KardexDetails almacenados en base de datos.
 	 **/
 	@GetMapping("/kardexDetails")
-	public List<MKardexDetails> getAllKardexMain() {
+	public List<MKardexDetails> getAllKardexMain()
+	{
 		List<MKardexDetails> AllKardexDetails = iKardexDetailsRepository.findAll();
 		return AllKardexDetails;
 	}
 
 	/**
-	 * This method expose the end point that create new kardexDetails in database.
+	 * Este método expone los endpoint para crear nuevos KardexDetails en base de datos.
 	 * 
-	 * @param KardexMain object contain kardexDetails main info mapped.
-	 * @return responseEntity response OK or Server Error.
+	 * @param KardexMain
+	 *            Objeto que contiene el body de un KardexDetail.
+	 * @return responseEntity responde OK o Server Error.
 	 **/
 	@PostMapping("/kardexDetails")
-	public ResponseEntity<Map<String, String>> newKardexDetails(@Valid @RequestBody MKardexDetails KardexDetail) {
-		try {
+	public ResponseEntity<Map<String, String>> newKardexDetails(@Valid @RequestBody MKardexDetails KardexDetail)
+	{
+		try
+		{
 			iKardexDetailsRepository.save(KardexDetail);
 			MapResponse.clearGenericMap();
 			MapResponse.addGenericMap("Message", "KardexDetails created successfully");
 			MapResponse.addGenericMap("HttpStatus", "200");
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			MapResponse.clearGenericMap();
 			MapResponse.addGenericMap("Message", "The Kardex couldn't be created");
 			MapResponse.addGenericMap("HttpStatus", "500");
@@ -64,21 +70,26 @@ public class CKardexDetails {
 	}
 
 	/**
-	 * This method expose the end point that get kardexDetails by id.
+	 * Este método expone el endpoint que obtiene un KardexDetail según sea el id.
 	 * 
-	 * @param KardexMain object contain kardex details info mapped.
-	 * @return responseEntity response OK or Server Error.
+	 * @param KardexDetailsId
+	 *            Objeto que contiene el id del KardexDetails a ser obtenido.
+	 * @return responseEntity response OK o Server Error.
 	 **/
 	@GetMapping("/kardexDetails/{id}")
-	public ResponseEntity<Map<String, String>> getByIdKardexMain(@PathVariable(value = "id") Long KardexDetailsId) {
-		try {
+	public ResponseEntity<Map<String, String>> getByIdKardexMain(@PathVariable(value = "id") Long KardexDetailsId)
+	{
+		try
+		{
 			Optional<MKardexDetails> kardex = iKardexDetailsRepository.findById(KardexDetailsId);
 			MKardexDetails kardexDetails = kardex.get();
 			MapResponse.clearGenericMap();
 			MapResponse.addGenericMap("Message", "KardexDetails found");
 			MapResponse.addGenericMap("HttpStatus", "200");
 			MapResponse.addGenericMap("Kardex", kardexDetails.getDescription());
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			MapResponse.clearGenericMap();
 			MapResponse.addGenericMap("Message", "KardexDetails not found");
 			MapResponse.addGenericMap("KardexDetailsId requested", KardexDetailsId.toString());
@@ -92,16 +103,20 @@ public class CKardexDetails {
 	}
 
 	/**
-	 * This method expose the end point that update kardexDetails by id.
+	 * Este método expone el endpoint que actualiza un kardexDetails según el id.
 	 * 
-	 * @param KardexMainId   id contain kardexDetails to be updated.
-	 * @param kardexMainBody containt the body with the kardex information.
-	 * @return responseEntity response OK or Server Error.
+	 * @param KardexMainId
+	 *            Id del kardexDetails a ser actualizado.
+	 * @param kardexMainBody
+	 *            Contiene el body con la nueva información del KardexDetails.
+	 * @return responseEntity responde OK o Server Error.
 	 **/
 	@PutMapping("/kardexDetails/{id}")
 	public ResponseEntity<Map<String, String>> updateKardex(@PathVariable(value = "id") Long KardexDetailsId,
-			@Valid @RequestBody MKardexDetails kardexDetailsBody) {
-		try {
+			@Valid @RequestBody MKardexDetails kardexDetailsBody)
+	{
+		try
+		{
 			Optional<MKardexDetails> kardex = iKardexDetailsRepository.findById(KardexDetailsId);
 			MKardexDetails kardexDetails = kardex.get();
 			kardexDetails.setDate(kardexDetailsBody.getDate());
@@ -119,7 +134,9 @@ public class CKardexDetails {
 			MapResponse.addGenericMap("Message", "KardexDetails updated successfully");
 			MapResponse.addGenericMap("HttpStatus", "200");
 			MapResponse.addGenericMap("KardexId updated", KardexDetailsId.toString());
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			MapResponse.clearGenericMap();
 			MapResponse.addGenericMap("Message", "KardexDetails not found");
 			MapResponse.addGenericMap("KardexId requested", KardexDetailsId.toString());
@@ -134,20 +151,25 @@ public class CKardexDetails {
 	}
 
 	/**
-	 * This method expose the end point that delete kardex by id.
+	 * Este método expone el endpoint que elimina el KardexDetails, según sea el Id.
 	 * 
-	 * @param KardexDetailsId id contain kardexDetails to be deleted.
-	 * @return responseEntity response OK or Server Error.
+	 * @param KardexDetailsId
+	 *            Id que contiene el kardexDetails a ser eliminado.
+	 * @return responseEntity responde OK o Server Error.
 	 **/
 	@DeleteMapping("/kardexDetails/{id}")
-	public ResponseEntity<?> deleteByIdKardexDetails(@PathVariable(value = "id") Long KardexDetailsId) {
-		try {
+	public ResponseEntity<?> deleteByIdKardexDetails(@PathVariable(value = "id") Long KardexDetailsId)
+	{
+		try
+		{
 			iKardexDetailsRepository.deleteById(KardexDetailsId);
 			MapResponse.clearGenericMap();
 			MapResponse.addGenericMap("Message", "KardexDetails deleted successfully");
 			MapResponse.addGenericMap("KardexId deleted", KardexDetailsId.toString());
 			MapResponse.addGenericMap("HttpStatus", "200");
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			MapResponse.clearGenericMap();
 			MapResponse.addGenericMap("Message", "KardexDetails couldn't be deleted");
 			MapResponse.addGenericMap("KardexId requested", KardexDetailsId.toString());
@@ -155,7 +177,7 @@ public class CKardexDetails {
 			ResponseEntity<?> responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(MapResponse.getGenericMap());
 			return responseEntity;
-			
+
 		}
 		ResponseEntity<?> responseEntity = ResponseEntity.status(HttpStatus.OK).body(MapResponse.getGenericMap());
 		return responseEntity;
