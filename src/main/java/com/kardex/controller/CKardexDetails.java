@@ -59,8 +59,9 @@ public class CKardexDetails {
 	 * Este método expone el endpoint que crea nuevos KardexDetails en bases de
 	 * datos.
 	 * 
-	 * @param KardexMain object contain kardexDetails main info mapped.
-	 * @return responseEntity response OK or Server Error.
+	 * @param KardexMain
+	 *            Objeto que contiene el body de un KardexDetail.
+	 * @return responseEntity responde OK o Server Error.
 	 **/
 	@PostMapping("/kardexDetails")
 	public ResponseEntity<Map<String, String>> newKardexDetails(@Valid @RequestBody MKardexDetails KardexDetail) {
@@ -96,6 +97,7 @@ public class CKardexDetails {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Este método expone el endpoint que obtiene los kardexDetails por id.
 	 * 
 	 * @param KardexMain el objeto contiene los kardex details info mapeados.
@@ -139,6 +141,7 @@ public class CKardexDetails {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Este método expone el endpoint para actualizar los kardexDetails por id.
 	 * 
 	 * @param KardexMainId   id que representa el kardexDetails a ser actualizado.
@@ -216,6 +219,7 @@ public class CKardexDetails {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Este método contiene el endpoint que elimina un KardexDetail por Id.
 	 * 
 	 * @param KardexDetailsId id que representa el kardexDetails a ser eliminado.
