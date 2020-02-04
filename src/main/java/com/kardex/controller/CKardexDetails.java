@@ -1,5 +1,6 @@
 package com.kardex.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,190 +34,194 @@ import com.kardex.repository.IKardexDetailsRepository;
  **/
 @RestController
 public class CKardexDetails {
-//	private static final Logger log = LoggerFactory.getLogger(CKardexDetails.class);
-//	@Autowired
-//	IKardexDetailsRepository iKardexDetailsRepository;
-//
-//	/**
-//	 * Este método expone el endpoint que obtiene todos los kardexDetails existentes
-//	 * en bases de datos.
-//	 * 
-//	 * @return AllKardexMain retorna todos los KardexDetails main info mapeados.
-//	 **/
-//	@GetMapping("/kardexDetails")
-//	public List<MKardexDetails> getAllKardexMain() {
-//		log.debug("Ingresando al método getAllKardexMain() de la clase (controller) CKardexDetails");
-//		log.debug("Obteniendo todos los KadexDetails de base de datos");
-//		List<MKardexDetails> AllKardexDetails = iKardexDetailsRepository.findAll();
-//		log.debug("Retornando datos KardexDetails obtenidos");
-//		log.debug("Objetos retornados: " + AllKardexDetails);
-//		log.debug("saliendo del método getAllKardexMain() de la clase (controller) CKardexDetails");
-//		return AllKardexDetails;
-//	}
-//
-//	/**
-//	 * Este método expone el endpoint que crea nuevos KardexDetails en bases de
-//	 * datos.
-//	 * 
-//	 * @param KardexMain
-//	 *            Objeto que contiene el body de un KardexDetail.
-//	 * @return responseEntity responde OK o Server Error.
-//	 **/
-//	@PostMapping("/kardexDetails")
-//	public ResponseEntity<Map<String, String>> newKardexDetails(@Valid @RequestBody MKardexDetails KardexDetail) {
-//		log.debug("Ingresando al método newKardexDetails() de la clase (controller) CKardexDetails");
-//		try {
-//			log.debug("Guardando en base de datos, los datos recibidos");
-//			log.debug("Datos recibidos por parámetros: " + KardexDetail);
-//			iKardexDetailsRepository.save(KardexDetail);
-//			log.debug("Datos guardados correctamente");
-//			log.debug("Armando respuesta del servidor");
-//			MapResponse.clearGenericMap();
-//			MapResponse.addGenericMap("Message", "KardexDetails created successfully");
-//			MapResponse.addGenericMap("HttpStatus", "200");
-//			log.debug("Armando correctamente");
-//			log.debug("Respuesta del servidor: " + ResponseEntity.ok().body(MapResponse.getGenericMap()));
-//		} catch (Exception e) {
-//			log.error("Ha ocurrido un error inesperado. Falló la persistencia de los datos");
-//			log.error("Armando respuesta del servidor");
-//			MapResponse.clearGenericMap();
-//			MapResponse.addGenericMap("Message", "The Kardex couldn't be created");
-//			MapResponse.addGenericMap("HttpStatus", "500");
-//			log.error("Armado correctamente");
-//			log.error("Respuesta a retornar: "
-//					+ ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(MapResponse.getGenericMap()));
-//			ResponseEntity<Map<String, String>> responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//					.body(MapResponse.getGenericMap());
-//			log.error("saliendo del método newKardexDetails() de la clase (controller) CKardexDetails");
-//			return responseEntity;
-//		}
-//		log.debug("saliendo del método newKardexDetails() de la clase (controller) CKardexDetails");
-//		ResponseEntity<Map<String, String>> responseEntity = ResponseEntity.ok().body(MapResponse.getGenericMap());
-//		return responseEntity;
-//	}
-//
-//	/**
-//<<<<<<< HEAD
-//	 * Este método expone el endpoint que obtiene los kardexDetails por id.
-//	 * 
-//	 * @param KardexMain el objeto contiene los kardex details info mapeados.
-//	 * @return responseEntity responde OK (200) o Server Error(500).
-//	 **/
-//	@GetMapping("/kardexDetails/{id}")
-//	public ResponseEntity<Map<String, String>> getByIdKardexMain(@PathVariable(value = "id") Long KardexDetailsId) {
-//		log.debug("Ingresando al método getByIdKardexMain() de la clase (controller) CKardexDetails");
-//		try {
-//			log.debug("Obteniendo información del KerdexDetail con id '" + KardexDetailsId + "'");
-//			Optional<MKardexDetails> kardex = iKardexDetailsRepository.findById(KardexDetailsId);
-//			MKardexDetails kardexDetails = kardex.get();
-//			log.debug("Obteniendo objeto de respuesta de la base de datos");
-//			log.debug("Respuesta obtenida: " + kardexDetails);
-//			log.debug("Armando respuesta del servidor");
-//			MapResponse.clearGenericMap();
-//			MapResponse.addGenericMap("Message", "KardexDetails found");
-//			MapResponse.addGenericMap("HttpStatus", "200");
-//			MapResponse.addGenericMap("Kardex", kardexDetails.getDescription());
-//			log.debug("Respuesta final: " + ResponseEntity.ok().body(MapResponse.getGenericMap()));
-//		} catch (Exception e) {
-//			log.error("Ha ocurrido un error inesperado");
-//			log.error("Armando respuesta del servidor");
-//			log.error("Respuesta final del servidor: "
-//					+ ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(MapResponse.getGenericMap()));
-//			MapResponse.clearGenericMap();
-//			MapResponse.addGenericMap("Message", "KardexDetails not found");
-//			MapResponse.addGenericMap("KardexDetailsId requested", KardexDetailsId.toString());
-//			MapResponse.addGenericMap("HttpStatus", "500");
-//			ResponseEntity<Map<String, String>> responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//					.body(MapResponse.getGenericMap());
-//			log.error("retornando respuesta del servidor");
-//			log.error("saliendo del método getByIdKardexMain() de la clase (controller) CKardexDetails");
-//			return responseEntity;
-//		}
-//		log.error("saliendo del método getByIdKardexMain() de la clase (controller) CKardexDetails");
-//		ResponseEntity<Map<String, String>> responseEntity = ResponseEntity.ok().body(MapResponse.getGenericMap());
-//		log.error("Retornando un responseEntity");
-//		log.error("saliendo del método getByIdKardexMain() de la clase (controller) CKardexDetails");
-//		return responseEntity;
-//	}
-//
-//	/**
-//<<<<<<< HEAD
-//	 * Este método expone el endpoint para actualizar los kardexDetails por id.
-//	 * 
-//	 * @param KardexMainId   id que representa el kardexDetails a ser actualizado.
-//	 * @param kardexMainBody es el body con la información de un kardex.
-//	 * @return responseEntity response un OK (200) o un Server Error (500).
-//	 **/
-//	@PutMapping("/kardexDetails/{id}")
-//	public ResponseEntity<Map<String, String>> updateKardex(@PathVariable(value = "id") Long KardexDetailsId,
-//			@Valid @RequestBody MKardexDetails kardexDetailsBody) {
-//		log.debug("Ingresando al método updateKardex() de la clase (controller) CKardexDetails");
-//		try {
-//			log.debug("Obteniendo KardexDetails representado con el id'" + KardexDetailsId + "'");
-//			Optional<MKardexDetails> kardex = iKardexDetailsRepository.findById(KardexDetailsId);
-//			log.debug("KardexDetails obtenido: " + kardex);
-//			log.debug("KardexDetails obtenido: ");
-//			MKardexDetails kardexDetails = kardex.get();
-//			log.debug("Setteando los datos del KardexDetails obtenido");
-//			log.debug("Setteando fecha");
-//			kardexDetails.setDate(kardexDetailsBody.getDate());
-//			log.debug("fecha setteada");
-//			log.debug("Setteando Descripcion");
-//			kardexDetails.setDescription(kardexDetailsBody.getDescription());
-//			log.debug("Descripcion setteada");
-//			log.debug("Setteando Valor Unitario");
-//			kardexDetails.setUnitValue(kardexDetailsBody.getUnitValue());
-//			log.debug("Valor Unitario seteado");
-//			log.debug("Setteando Cantidad (Entrada)");
-//			kardexDetails.setInputQuantity(kardexDetailsBody.getInputQuantity());
-//			log.debug("Cantidad (Entrada) Setteado");
-//			log.debug("Setteando (Entrada) Valor de entrada");
-//			kardexDetails.setInputValue(kardexDetailsBody.getInputValue());
-//			log.debug("(Entrada) Valor de entrada Setteado");
-//			log.debug("Setteando Cantidad (Salida)");
-//			kardexDetails.setOutputQuantity(kardexDetailsBody.getOutputQuantity());
-//			log.debug("Cantidad (Salida) Setteado");
-//			log.debug("Setteando (Salida) Valor de salida");
-//			kardexDetails.setOutputValue(kardexDetailsBody.getOutputValue());
-//			log.debug("Valor de salida setteado");
-//			log.debug("Setteando Cantidad Balance");
-//			kardexDetails.setBalanceQuantity(kardexDetailsBody.getBalanceQuantity());
-//			log.debug("Cantidad Balance setteado");
-//			log.debug("Setteando Valor de balanza");
-//			kardexDetails.setBalanceValue(kardexDetailsBody.getBalanceValue());
-//			log.debug("Valor de balanza Setteado");
-//			log.debug("Guardando información anterior en base de datos para actualización de objeto");
-//			iKardexDetailsRepository.save(kardexDetails);
-//			log.debug("Guardado exitosamente");
-//			log.debug("Armando respuesta del servidor");
-//			MapResponse.clearGenericMap();
-//			MapResponse.addGenericMap("Message", "KardexDetails updated successfully");
-//			MapResponse.addGenericMap("HttpStatus", "200");
-//			MapResponse.addGenericMap("KardexId updated", KardexDetailsId.toString());
-//			log.debug("Respuesta del servidor: " + ResponseEntity.ok().body(MapResponse.getGenericMap()));
-//		} catch (Exception e) {
-//			log.error("Ha ocurrido un error inesperado");
-//			log.error("Armando respuesta del servidor");
-//			MapResponse.clearGenericMap();
-//			log.error("Respuesta del servidor:"
-//					+ ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(MapResponse.getGenericMap()));
-//			MapResponse.addGenericMap("Message", "KardexDetails not found");
-//			MapResponse.addGenericMap("KardexId requested", KardexDetailsId.toString());
-//			MapResponse.addGenericMap("HttpStatus", "500");
-//			ResponseEntity<Map<String, String>> responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//					.body(MapResponse.getGenericMap());
-//			e.printStackTrace();
-//			log.error("Retornando respuesta");
-//			log.error("Saliendo del método updateKardex() de la clase (controller) CKardexDetails");
-//			return responseEntity;
-//		}
-//		log.debug("Armando respuesta del servidor");
-//		log.debug("Respuesta: " + ResponseEntity.ok().body(MapResponse.getGenericMap()));
-//		log.debug("Saliendo del método updateKardex() de la clase (controller) CKardexDetails");
-//		ResponseEntity<Map<String, String>> responseEntity = ResponseEntity.ok().body(MapResponse.getGenericMap());
-//		return responseEntity;
-//	}
-//
+	private static final Logger log = LoggerFactory.getLogger(CKardexDetails.class);
+	@Autowired
+	IKardexDetailsRepository iKardexDetailsRepository;
+	private ResponseEntity<Map<String, Object>> responseEntityObject;
+	private ResponseEntity<Map<String, String>> responseEntityString;
+	private Map<String, String> stringAndStringMap = new HashMap<>();
+	private Map<String, Object> stringAndObjecMap = new HashMap<>();
+	private Map<String, Object> allMap = new HashMap<>();
+
+	/**
+	 * Este método expone el endpoint que obtiene todos los kardexDetails existentes
+	 * en bases de datos.
+	 * 
+	 * @return AllKardexMain retorna todos los KardexDetails main info mapeados.
+	 **/
+	@GetMapping("/kardexDetails")
+	public ResponseEntity<Map<String, Object>> getAllKardexDetails() {
+		
+		try
+		{
+			log.debug("Ingresando al método getAllKardexDetails() de la clase (controller) CKardexDetails");
+			log.debug("Obteniendo todos los KadexDetails de base de datos");
+			List<MKardexDetails> AllKardexDetails = iKardexDetailsRepository.findAll();
+			stringAndObjecMap.clear();
+			stringAndStringMap.clear();
+			allMap.clear();
+			stringAndStringMap.put("HttpStatus", "200");
+			stringAndStringMap.put("Message", "All KardexDetails have been found");
+			stringAndObjecMap.put("kardexDetailsList", AllKardexDetails);
+			allMap.putAll(stringAndStringMap);
+			allMap.putAll(stringAndObjecMap);
+			responseEntityObject = ResponseEntity.status(HttpStatus.OK).body(allMap);
+			log.debug("Retornando datos KardexDetails obtenidos");
+			log.debug("Mapa retornado: " + stringAndObjecMap);
+		}
+		catch (Exception e)
+		{
+			stringAndObjecMap.clear();
+			stringAndStringMap.clear();
+			allMap.clear();
+			stringAndStringMap.put("HttpStatus", "500");
+			stringAndStringMap.put("Message", "KardexDetails not found");
+			stringAndObjecMap.put("kardexDetailsList", null);
+			allMap.putAll(stringAndStringMap);
+			allMap.putAll(stringAndObjecMap);
+			responseEntityObject = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(allMap);
+		}
+		log.debug("saliendo del método getAllKardexDetails() de la clase (controller) CKardexDetails");
+		return responseEntityObject;
+	}
+
+	/**
+	 * Este método expone el endpoint que crea nuevos KardexDetails en bases de
+	 * datos.
+	 * 
+	 * @param KardexMain
+	 *            Objeto que contiene el body de un KardexDetail.
+	 * @return responseEntity responde OK o Server Error.
+	 **/
+	@PostMapping("/kardexDetails")
+	public ResponseEntity<Map<String, String>> newKardexDetails(@Valid @RequestBody MKardexDetails KardexDetail) {
+		log.debug("Ingresando al método newKardexDetails() de la clase (controller) CKardexDetails");
+		try {
+			log.debug("Guardando en base de datos, los datos recibidos");
+			log.debug("Datos recibidos por parámetros: " + KardexDetail);
+			iKardexDetailsRepository.save(KardexDetail);
+			log.debug("Datos guardados correctamente");
+			log.debug("Armando respuesta del servidor");
+			stringAndStringMap.clear();
+			stringAndStringMap.put("Message", "KardexDetails created successfully");
+			stringAndStringMap.put("HttpStatus", "200");
+			responseEntityString = ResponseEntity.status(HttpStatus.OK).body(stringAndStringMap);
+			log.debug("Armando correctamente");
+			log.debug("Mapa de respuesta: " + stringAndStringMap);
+		} catch (Exception e) {
+			log.error("Ha ocurrido un error inesperado. Falló la persistencia de los datos");
+			log.error("Armando respuesta del servidor");
+			stringAndStringMap.clear();
+			stringAndStringMap.put("Message", "The Kardex couldn't be created");
+			stringAndStringMap.put("HttpStatus", "500");
+			log.error("Armado correctamente");
+			log.error("Respuesta a retornar: "+stringAndStringMap);
+			responseEntityString = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(stringAndStringMap);
+			log.error("saliendo del método newKardexDetails() de la clase (controller) CKardexDetails");
+		}
+		log.debug("saliendo del método newKardexDetails() de la clase (controller) CKardexDetails");	
+		return responseEntityString;
+	}
+
+	/**
+	 * Este método expone el endpoint que obtiene los kardexDetails por id.
+	 * 
+	 * @param KardexMain el objeto contiene los kardex details info mapeados.
+	 * @return responseEntity responde OK (200) o Server Error(500).
+	 **/
+	@GetMapping("/kardexDetails/{id}")
+	public ResponseEntity<Map<String,Object>> getByIdKardexDetails(@PathVariable(value = "id") Long KardexDetailsId) {
+		log.debug("Ingresando al método getByIdKardexDetails() de la clase (controller) CKardexDetails");
+		try {
+			log.debug("Obteniendo información del KerdexDetail con id '" + KardexDetailsId + "'");
+			Optional<MKardexDetails> kardex = iKardexDetailsRepository.findById(KardexDetailsId);
+			MKardexDetails kardexDetails = kardex.get();
+			log.debug("Obteniendo objeto de respuesta de la base de datos");
+			log.debug("Respuesta obtenida: " + kardexDetails);
+			log.debug("Armando respuesta del servidor");
+			stringAndStringMap.clear();
+			stringAndObjecMap.clear();
+			allMap.clear();
+			stringAndStringMap.put("Message", "KardexDetails has been found");
+			stringAndStringMap.put("HttpStatus", "200");
+			stringAndObjecMap.put("Kardex", kardexDetails);
+			allMap.putAll(stringAndStringMap);
+			allMap.putAll(stringAndObjecMap);
+			responseEntityObject = ResponseEntity.status(HttpStatus.OK).body(allMap);
+			log.debug("Respuesta final: " + allMap);
+		} catch (Exception e) {
+			log.error("Ha ocurrido un error inesperado");
+			log.error("Armando respuesta del servidor");
+			log.error("Respuesta final del servidor: "+ allMap);
+			stringAndStringMap.clear();
+			stringAndObjecMap.clear();
+			allMap.clear();
+			stringAndStringMap.put("Message", "KardexDetails not found");
+			stringAndStringMap.put("HttpStatus", "500");
+			stringAndObjecMap.put("Kardex", null);
+			allMap.putAll(stringAndStringMap);
+			allMap.putAll(stringAndObjecMap);
+			responseEntityObject = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(allMap);
+			log.error("retornando respuesta del servidor");
+			log.error("saliendo del método getByIdKardexDetails() de la clase (controller) CKardexDetails");
+		}
+		log.error("saliendo del método getByIdKardexDetails() de la clase (controller) CKardexDetails");
+		log.error("Retornando un responseEntity");
+		log.error("saliendo del método getByIdKardexDetails() de la clase (controller) CKardexDetails");
+		return responseEntityObject;
+	}
+
+	/**
+	 * Este método expone el endpoint para actualizar los kardexDetails por id.
+	 * 
+	 * @param KardexMainId   id que representa el kardexDetails a ser actualizado.
+	 * @param kardexMainBody es el body con la información de un kardex.
+	 * @return responseEntity response un OK (200) o un Server Error (500).
+	 **/
+	@PutMapping("/kardexDetails/{id}")
+	public ResponseEntity<Map<String, String>> updateKardexDetails(@PathVariable(value = "id") Long KardexDetailsId,
+			@Valid @RequestBody MKardexDetails kardexDetailsBody) {
+		log.debug("Ingresando al método updateKardexDetails() de la clase (controller) CKardexDetails");
+		try {
+			log.debug("Obteniendo KardexDetails representado con el id'" + KardexDetailsId + "'");
+			Optional<MKardexDetails> kardex = iKardexDetailsRepository.findById(KardexDetailsId);
+			MKardexDetails kardexDetails = kardex.get();
+			kardexDetails.setDate(kardexDetailsBody.getDate());
+			kardexDetails.setDescription(kardexDetailsBody.getDescription());
+			kardexDetails.setUnitValue(kardexDetailsBody.getUnitValue());
+			kardexDetails.setInputQuantity(kardexDetailsBody.getInputQuantity());
+			kardexDetails.setInputValue(kardexDetailsBody.getInputValue());
+			kardexDetails.setOutputQuantity(kardexDetailsBody.getOutputQuantity());
+			kardexDetails.setOutputValue(kardexDetailsBody.getOutputValue());
+			kardexDetails.setBalanceQuantity(kardexDetailsBody.getBalanceQuantity());
+			kardexDetails.setBalanceValue(kardexDetailsBody.getBalanceValue());
+			iKardexDetailsRepository.save(kardexDetails);
+			
+			log.debug("Armando respuesta del servicio");
+			stringAndStringMap.clear();
+			stringAndStringMap.put("HttpStatus", "200");
+			stringAndStringMap.put("Message", "KardexDetails updated successfully");
+			stringAndStringMap.put("KardexId", KardexDetailsId.toString());
+			responseEntityString = ResponseEntity.status(HttpStatus.OK).body(stringAndStringMap);			
+			log.debug("Respuesta del servidor: "+stringAndStringMap);
+		} catch (Exception e) {
+			log.error("Ha ocurrido un error inesperado");
+			log.error("Armando respuesta del servidor");
+			stringAndStringMap.clear();
+			stringAndStringMap.put("HttpStatus", "500");
+			stringAndStringMap.put("Message", "KardexDetails could not be updated");
+			stringAndStringMap.put("KardexId", KardexDetailsId.toString());
+			log.error("Respuesta del servidor:" + stringAndStringMap);	
+			log.error("Retornando respuesta");
+			log.error("Saliendo del método updateKardexDetails() de la clase (controller) CKardexDetails");
+			responseEntityString = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(stringAndStringMap);
+		}
+		log.debug("Armando respuesta del servidor");
+		log.debug("Respuesta: " + stringAndStringMap);
+		log.debug("Saliendo del método updateKardexDetails() de la clase (controller) CKardexDetails");
+		return responseEntityString;
+	}
+
 //	/**
 //<<<<<<< HEAD
 //	 * Este método contiene el endpoint que elimina un KardexDetail por Id.

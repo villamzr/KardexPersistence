@@ -1,8 +1,6 @@
 package com.kardex.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -19,6 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kardex.domain.MKardexMain;
+import com.kardex.domain.ResponseAllKardexMain;
+import com.kardex.domain.ResponseDeleteByIdKardexMain;
+import com.kardex.domain.ResponseGetKardexMainById;
+import com.kardex.domain.ResponsePutKardexMain;
+import com.kardex.domain.ResponseSaveKardexMain;
 import com.kardex.repository.IKardexMainRepository;
 
 @RestController
@@ -26,11 +29,11 @@ public class CKardexMain
 {
 	@Autowired
 	IKardexMainRepository iKardexMainRepository;
-	private ResponseEntity<Map<String, Object>> responseEntityObject;
-	private ResponseEntity<Map<String, String>> responseEntityString;
-	private Map<String, String> stringAndStringMap = new HashMap<>();
-	private Map<String, Object> stringAndObjecMap = new HashMap<>();
-	private Map<String, Object> allMap = new HashMap<>();
+	private ResponseEntity<ResponseAllKardexMain> responseAllKardexMain;
+	private ResponseEntity<ResponseSaveKardexMain> responseSaveKardexMain;
+	private ResponseEntity<ResponseGetKardexMainById> responseGetKardexMainById;
+	private ResponseEntity<ResponsePutKardexMain> responsePutKardexMain;
+	private ResponseEntity<ResponseDeleteByIdKardexMain> responseDeleteByIdKardexMain;
 
 	/**
 	 * Este método expone el endpoint que obtiene todos los Kardex existentes en la base de datos.
@@ -38,29 +41,20 @@ public class CKardexMain
 	 * @return AllKardexMain retorna todos los Kardex Main mappeados en base de datos.
 	 **/
 	@GetMapping("/kardex")
-	public ResponseEntity<Map<String, Object>> getAllKardexMain()
+	public ResponseEntity<ResponseAllKardexMain> getAllKardexMain()
 	{
-		try {
+		try
+		{
 			List<MKardexMain> AllKardexMain = iKardexMainRepository.findAll();
-			stringAndObjecMap.clear();
-			stringAndStringMap.clear();
-			stringAndStringMap.put("HttpStatus", "200");
-			stringAndStringMap.put("Message", "All Kardex Info have been found");
-			stringAndObjecMap.put("kardexMainList", AllKardexMain);
-			allMap.putAll(stringAndStringMap);
-			allMap.putAll(stringAndObjecMap);
-			responseEntityObject = ResponseEntity.status(HttpStatus.OK).body(allMap);
-		} catch (Exception e) {
-			stringAndObjecMap.clear();
-			stringAndStringMap.clear();
-			stringAndStringMap.put("HttpStatus", "500");
-			stringAndStringMap.put("Message", "Kardex Info not found");
-			stringAndObjecMap.put("kardexMainList", null);
-			allMap.putAll(stringAndStringMap);
-			allMap.putAll(stringAndObjecMap);
-			responseEntityObject = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(allMap);
+			ResponseAllKardexMain response = new ResponseAllKardexMain(200, "Kardex List found", AllKardexMain);
+			responseAllKardexMain = ResponseEntity.status(HttpStatus.OK).body(response);
 		}
-		return responseEntityObject;
+		catch (Exception e)
+		{
+			ResponseAllKardexMain response = new ResponseAllKardexMain(500, "Kardex List not found", null);
+			responseAllKardexMain = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+		return responseAllKardexMain;
 	}
 
 	/**
@@ -71,24 +65,20 @@ public class CKardexMain
 	 * @return responseEntity response OK (200) o Server Error (500).
 	 **/
 	@PostMapping("/kardex")
-	public ResponseEntity<Map<String, String>> newKardexMain(@Valid @RequestBody MKardexMain KardexMain)
+	public ResponseEntity<ResponseSaveKardexMain> newKardexMain(@Valid @RequestBody MKardexMain KardexMain)
 	{
 		try
 		{
 			iKardexMainRepository.save(KardexMain);
-			stringAndStringMap.clear();
-			stringAndStringMap.put("Message", "Kardex created successfully");
-			stringAndStringMap.put("HttpStatus", "200");
-			responseEntityString = ResponseEntity.status(HttpStatus.OK).body(stringAndStringMap);
+			ResponseSaveKardexMain response = new ResponseSaveKardexMain(200, "Kardex created successfully");
+			responseSaveKardexMain = ResponseEntity.status(HttpStatus.OK).body(response);
 		}
 		catch (Exception e)
 		{
-			stringAndStringMap.clear();
-			stringAndStringMap.put("Message", "The Kardex couldn't be created");
-			stringAndStringMap.put("HttpStatus", "500");
-			responseEntityString = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(stringAndStringMap);
+			ResponseSaveKardexMain response = new ResponseSaveKardexMain(500, "Kardex could not be created");
+			responseSaveKardexMain = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
-		return responseEntityString;
+		return responseSaveKardexMain;
 	}
 
 	/**
@@ -99,33 +89,21 @@ public class CKardexMain
 	 * @return responseEntity response OK or Server Error.
 	 **/
 	@GetMapping("/kardex/{id}")
-	public ResponseEntity<Map<String, Object>> getByIdKardexMain(@PathVariable(value = "id") Long KardexMainId)
+	public ResponseEntity<ResponseGetKardexMainById> getByIdKardexMain(@PathVariable(value = "id") Long KardexMainId)
 	{
 		try
 		{
 			Optional<MKardexMain> kardexMain = iKardexMainRepository.findById(KardexMainId);
 			MKardexMain kardexMainResult = kardexMain.get();
-			stringAndStringMap.clear();
-			stringAndObjecMap.clear();
-			stringAndStringMap.put("Message", "Kerdex Found");
-			stringAndStringMap.put("HttpStatus", "200");
-			stringAndObjecMap.put("kardexInfo", kardexMainResult);
-			allMap.putAll(stringAndStringMap);
-			allMap.putAll(stringAndObjecMap);
-			responseEntityObject = ResponseEntity.status(HttpStatus.OK).body(allMap);
+			ResponseGetKardexMainById response = new ResponseGetKardexMainById(200, "Kardex found", kardexMainResult);
+			responseGetKardexMainById = ResponseEntity.status(HttpStatus.OK).body(response);
 		}
 		catch (Exception e)
 		{
-			stringAndStringMap.clear();
-			stringAndObjecMap.clear();
-			stringAndStringMap.put("Message", "Kerdex not Found");
-			stringAndStringMap.put("HttpStatus", "500");
-			stringAndObjecMap.put("kardexInfo", null);
-			allMap.putAll(stringAndStringMap);
-			allMap.putAll(stringAndObjecMap);
-			responseEntityObject = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(allMap);
+			ResponseGetKardexMainById response = new ResponseGetKardexMainById(500, "Kardex not found", null);
+			responseGetKardexMainById = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
-		return responseEntityObject;
+		return responseGetKardexMainById;
 	}
 
 	/**
@@ -138,66 +116,58 @@ public class CKardexMain
 	 * @return responseEntity responde OK or Server Error.
 	 **/
 	@PutMapping("/kardex/{id}")
-	public ResponseEntity<Map<String, String>> updateKardex(@PathVariable(value = "id") Long KardexMainId,
+	public ResponseEntity<ResponsePutKardexMain> updateKardex(@PathVariable(value = "id") Long KardexMainId,
 			@Valid @RequestBody MKardexMain kardexMainBody)
 	{
 		try
 		{
 			Optional<MKardexMain> kardex = iKardexMainRepository.findById(KardexMainId);
-			MKardexMain kardexMain = kardex.get();
-			kardexMain.setObject(kardexMainBody.getObject());
-			kardexMain.setSupplier(kardexMainBody.getSupplier());
-			kardexMain.setReference(kardexMainBody.getReference());
-			kardexMain.setUnit(kardexMainBody.getUnit());
-			kardexMain.setLocation(kardexMainBody.getLocation());
-			kardexMain.setMin(kardexMainBody.getMin());
-			kardexMain.setMax(kardexMainBody.getMax());
-			iKardexMainRepository.save(kardexMain);
-
-			stringAndStringMap.clear();
-			stringAndStringMap.put("Message", "Kardex updated successfully");
-			stringAndStringMap.put("HttpStatus", "200");
-			stringAndStringMap.put("kardexIdUpdated", KardexMainId.toString());
-			responseEntityString = ResponseEntity.status(HttpStatus.OK).body(stringAndStringMap);
+			MKardexMain getkardexMain = kardex.get();
+			getkardexMain.setObject(kardexMainBody.getObject());
+			getkardexMain.setSupplier(kardexMainBody.getSupplier());
+			getkardexMain.setReference(kardexMainBody.getReference());
+			getkardexMain.setUnit(kardexMainBody.getUnit());
+			getkardexMain.setMin(kardexMainBody.getMin());
+			getkardexMain.setLocation(kardexMainBody.getLocation());
+			getkardexMain.setMax(kardexMainBody.getMax());
+			iKardexMainRepository.save(getkardexMain);
+			ResponsePutKardexMain response = new ResponsePutKardexMain(200, "KardexMain updated successfully",
+					KardexMainId);
+			responsePutKardexMain = ResponseEntity.status(HttpStatus.OK).body(response);
 		}
 		catch (Exception e)
 		{
-			stringAndStringMap.clear();
-			stringAndStringMap.put("Message", "Kardex not found");
-			stringAndStringMap.put("kardexIdUpdated", KardexMainId.toString());
-			stringAndStringMap.put("HttpStatus", "500");
-			responseEntityString = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(stringAndStringMap);
+			ResponsePutKardexMain response = new ResponsePutKardexMain(500, "KardexMain could not updated",
+					KardexMainId);
+			responsePutKardexMain = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
-		return responseEntityString;
+		return responsePutKardexMain;
 	}
 
 	/**
 	 * Este método expone el endpoint para la eliminación del método por id.
-	 * 
-	 * @param KardexMainId id que contiene el kardex a ser eliminado.
+	 *
+	 * @param KardexMainId
+	 *            id que contiene el kardex a ser eliminado.
 	 * @return responseEntity que response ok (200) o error de servidor (500).
 	 **/
 	@DeleteMapping("/kardex/{id}")
-	public ResponseEntity<?> deleteByIdKardexMain(@PathVariable(value = "id") Long KardexMainId)
+	public ResponseEntity<ResponseDeleteByIdKardexMain> deleteByIdKardexMain(
+			@PathVariable(value = "id") Long KardexMainId)
 	{
 		try
 		{
 			iKardexMainRepository.deleteById(KardexMainId);
-			stringAndStringMap.clear();
-			stringAndStringMap.put("HttpStatus", "200");
-			stringAndStringMap.put("Message", "Kardex deleted successfully");
-			stringAndStringMap.put("KardexId", KardexMainId.toString());
-			responseEntityString = ResponseEntity.status(HttpStatus.OK).body(stringAndStringMap);
+			ResponseDeleteByIdKardexMain response = new ResponseDeleteByIdKardexMain(200,
+					"Kardex deleted successfulluy", KardexMainId);
+			responseDeleteByIdKardexMain = ResponseEntity.status(HttpStatus.OK).body(response);
 		}
 		catch (Exception e)
 		{
-			stringAndStringMap.clear();
-			stringAndStringMap.put("HttpStatus", "500");
-			stringAndStringMap.put("Message", "Kardex couldn't be deleted");
-			stringAndStringMap.put("KardexId", KardexMainId.toString());
-			responseEntityString = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(stringAndStringMap);
+			ResponseDeleteByIdKardexMain response = new ResponseDeleteByIdKardexMain(500, "Kardex could not be deleted",
+					KardexMainId);
+			responseDeleteByIdKardexMain = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
-		return responseEntityString;
+		return responseDeleteByIdKardexMain;
 	}
-
 }
