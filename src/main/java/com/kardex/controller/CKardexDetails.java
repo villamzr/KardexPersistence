@@ -27,12 +27,15 @@ import com.kardex.domain.ResponsePutKardexMain;
 import com.kardex.repository.IKardexDetailsRepository;
 
 /**
- * Esta clase expone los endpoints de: a) Obtener todos los KardesDetails
- * contenidos en base de datos. b) Obtener un KardexDetails filtrado por id. c)
- * Actualizar un KardexDetails. d) Eliminar un KardexDetails.
+ * Esta clase expone los endpoints de:
+ * Obtener todos los KardexDetails - #@GetMapping("/kardexDetails").
+ * Obtener KardexDetails por id - #@GetMapping("/kardexDetails/{id}").
+ * Actualizar un KardexDetail por id - #@PutMapping("/kardexDetails/{id}").
+ * Crear un nuevo KardexDetail - #@PostMapping("/kardexDetails").
+ * Eliminar un KardexDetail por id - #@DeleteMapping("/kardexDetails/{id}").
  * 
  * @author Alejandro Villamizar
- * @version 1.0.0
+ * @version 1.0.2
  * @since 1.0.0
  **/
 @RestController
@@ -50,21 +53,29 @@ public class CKardexDetails {
 	 * Este método expone el endpoint que obtiene todos los kardexDetails existentes
 	 * en bases de datos.
 	 * 
-	 * @return AllKardexMain retorna todos los KardexDetails main info mapeados.
+	 * @return responseAllKardexDetails retorna la lista de todos los KardexDetails.
 	 **/
 	@GetMapping("/kardexDetails")
-	public ResponseEntity<ResponseAllKardexDetails> getAllKardexDetails() {		
+	public ResponseEntity<ResponseAllKardexDetails> getAllKardexDetails() {
+		log.debug("Ingresando al método getAllKardexDetails() de la clase controladora CKardexDetails");
 		try
 		{
+			log.debug("Consultando KardexDetails existentes en base de datos");
 			List<MKardexDetails> ListKardexDetails = iKardexDetailsRepository.findAll();
+			log.debug("KardexDetails existentes en base de datos: "+ListKardexDetails);
 			ResponseAllKardexDetails response = new ResponseAllKardexDetails(200, "KardexDetails found", ListKardexDetails);
+			log.debug("Objeto que responde el servicio: /kardexDetails (GET): "+response);
 			responseAllKardexDetails = ResponseEntity.status(HttpStatus.OK).body(response);
 		}
 		catch (Exception e)
 		{
+			log.error("Ha ocurrido un error inesperado. No se pudo obtener respuesta de la base de datos");
 			ResponseAllKardexDetails response = new ResponseAllKardexDetails(500, "KardexDetails found", null);
+			log.error("Objeto que responde el servicio: "+response);
+			log.error("Causa del error: ", e.getCause());
 			responseAllKardexDetails = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
+		log.debug("Saliendo del método getAllKardexDetails() de la clase controladora CKardexDetails");
 		return responseAllKardexDetails;
 	}
 
@@ -72,54 +83,70 @@ public class CKardexDetails {
 	 * Este método expone el endpoint que crea nuevos KardexDetails en bases de
 	 * datos.
 	 * 
-	 * @param KardexMain
-	 *            Objeto que contiene el body de un KardexDetail.
-	 * @return responseEntity responde OK o Server Error.
+	 * @param KardexDetail Objeto que contiene el body de un nuevo KardexDetail.
+	 * @return responseNewKardexDetails retorna si la creación fue exitosa o no.
 	 **/
 	@PostMapping("/kardexDetails")
 	public ResponseEntity<ResponseNewKardexDetails> newKardexDetails(@Valid @RequestBody MKardexDetails KardexDetail) {
+		log.debug("Ingresando al método newKardexDetails() de la clase controladora CKardexDetails"); 
 		try {
+			log.debug("Persistiendo el nuevo KardexDetails en la base de datos");
 			iKardexDetailsRepository.save(KardexDetail);
+			log.debug("Body del nuevo KardexDetails:"+KardexDetail);
 			ResponseNewKardexDetails response = new ResponseNewKardexDetails(200, "KardexDetails created successfully");
+			log.debug("Objeto que responde el servicio: /kardexDetails (POST): "+response);
 			responseNewKardexDetails = ResponseEntity.status(HttpStatus.OK).body(response);
 		} catch (Exception e) {
+			log.error("Ha ocurrido un error inesperado. No se pudo crear el nuevo KardexDetail en la base de datos");
 			ResponseNewKardexDetails response = new ResponseNewKardexDetails(500, "KardexDetails could not be created");
+			log.error("Objeto que responde el servicio: "+response);
 			responseNewKardexDetails = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}	
+		log.debug("Saliendo del método newKardexDetails() de la clase controladora CKardexDetails");
 		return responseNewKardexDetails;
 	}
 
 	/**
 	 * Este método expone el endpoint que obtiene los kardexDetails por id.
 	 * 
-	 * @param KardexMain el objeto contiene los kardex details info mapeados.
-	 * @return responseEntity responde OK (200) o Server Error(500).
+	 * @param KardexDetailsId es el id que se utiliza para buscar un KardexDetail en base de datos.
+	 * @return responseGetByIdKardexDetails retorna si existe o no el KardexDetail en la base de datos.
 	 **/
 	@GetMapping("/kardexDetails/{id}")
 	public ResponseEntity<ResponseGetByIdKardexDetails> getByIdKardexDetails(@PathVariable(value = "id") Long KardexDetailsId) {
+		log.debug("Ingresando al método getByIdKardexDetails() de la clase controladora CKardexDetails"); 
 		try {
+			log.debug("Obteniendo el objeto KardexDetail de la base de datos con id #"+KardexDetailsId);
 			Optional<MKardexDetails> kardex = iKardexDetailsRepository.findById(KardexDetailsId);
 			MKardexDetails kardexDetails = kardex.get();
+			log.debug("Obteniendo el objeto KardexDetail obtenido"+kardexDetails);
 			ResponseGetByIdKardexDetails response = new ResponseGetByIdKardexDetails(200, "KardexDetails found", kardexDetails);
+			log.debug("Objero que response el servicio: "+response);
 			responseGetByIdKardexDetails = ResponseEntity.status(HttpStatus.OK).body(response);
 		} catch (Exception e) {
+			log.error("Ha ocurrido un error inesperado. No se pudo obtener respuesta de la base de datos para el id #"+KardexDetailsId);
 			ResponseGetByIdKardexDetails response = new ResponseGetByIdKardexDetails(500, "KardexDetails not found", null);
+			log.error("Objeto que responde el servicio: "+response);
+			log.error("Causa del error: ", e.getCause());
 			responseGetByIdKardexDetails = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
 		return responseGetByIdKardexDetails;
 	}
 
 	/**
-	 * Este método expone el endpoint para actualizar los kardexDetails por id.
+	 * Este método expone el endpoint que permite actualizar los kardexDetails por id.
 	 * 
-	 * @param KardexMainId   id que representa el kardexDetails a ser actualizado.
-	 * @param kardexMainBody es el body con la información de un kardex.
-	 * @return responseEntity response un OK (200) o un Server Error (500).
+	 * @param KardexDetailsId id que representa el kardexDetails a ser actualizado.
+	 * @param kardexDetailsBody es el body con la nueva información de un kardex.
+	 * @return responsePutKardexMain retorna si el KardexDetail pudo ser actualizado o no.
 	 **/
 	@PutMapping("/kardexDetails/{id}")
 	public ResponseEntity<ResponsePutKardexMain> updateKardexDetails(@PathVariable(value = "id") Long KardexDetailsId,
 			@Valid @RequestBody MKardexDetails kardexDetailsBody) {
+		log.debug("Ingresando al método updateKardexDetails() de la clase controladora CKardexDetails"); 
 		try {
+			log.debug("Actualizando el KardexDetail con el id #"+KardexDetailsId);
+			log.debug("Información nueva: "+kardexDetailsBody);
 			Optional<MKardexDetails> kardex = iKardexDetailsRepository.findById(KardexDetailsId);
 			MKardexDetails kardexDetails = kardex.get();
 			kardexDetails.setIdKardexMain(kardexDetailsBody.getIdKardexMain());
@@ -134,30 +161,41 @@ public class CKardexDetails {
 			kardexDetails.setBalanceValue(kardexDetailsBody.getBalanceValue());
 			iKardexDetailsRepository.save(kardexDetails);
 			ResponsePutKardexMain response = new ResponsePutKardexMain(200, "KardexDetails updated", KardexDetailsId);
+			log.debug("Objeto que response el servicio: "+response);
 			responsePutKardexMain = ResponseEntity.status(HttpStatus.OK).body(response);
 		} catch (Exception e) {
+			log.error("Ha ocurrido un error inesperado. El objeto KardexDetail con el id #"+KardexDetailsId+" no pudo ser actualizado");
 			ResponsePutKardexMain response = new ResponsePutKardexMain(500, "KardexDetails could not be updated", KardexDetailsId);
+			log.error("Objeto que responde el servicio: "+response);
+			log.error("Causa del error: ", e.getCause());
 			responsePutKardexMain = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
+		log.debug("Saliendo del método updateKardexDetails() de la clase controladora CKardexDetails"); 
 		return responsePutKardexMain;
 	}
 
 	/**
-	 * Este método contiene el endpoint que elimina un KardexDetail por Id.
+	 * Este método contiene el endpoint que permite eliminar un KardexDetail por Id.
 	 * 
 	 * @param KardexDetailsId id que representa el kardexDetails a ser eliminado.
-	 * @return responseEntity responde OK (200) o Server Error (500).
+	 * @return responseDeleteByIdKardexDetails retorna si se pudo o no eliminar el KardexDetail.
 	 **/
 	@DeleteMapping("/kardexDetails/{id}")
 	public ResponseEntity<ResponseDeleteByIdKardexDetails> deleteByIdKardexDetails(@PathVariable(value = "id") Long KardexDetailsId) {
+		log.debug("Ingresando al método deleteByIdKardexDetails() de la clase controladora CKardexDetails"); 
 		try {
+			log.debug("Eliminando el objeto KardexDetail con id #"+KardexDetailsId);
 			iKardexDetailsRepository.deleteById(KardexDetailsId);
 			ResponseDeleteByIdKardexDetails response = new ResponseDeleteByIdKardexDetails(200, "KardexDetails deleted successfully", KardexDetailsId);
+			log.debug("Objeto que response el servicio: +"+response);
 			responseDeleteByIdKardexDetails = ResponseEntity.status(HttpStatus.OK).body(response);
 		} catch (Exception e) {
+			log.error("Ha ocurrido un error inesperado. El objeto KardexDetail con el id #"+KardexDetailsId+" no pudo ser eliminado");
 			ResponseDeleteByIdKardexDetails response = new ResponseDeleteByIdKardexDetails(500, "KardexDetails could not be deleted", null);
+			log.error("Objeto que response el servicio: "+response);
 			responseDeleteByIdKardexDetails = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
+		log.debug("Saliendo del método deleteByIdKardexDetails() de la clase controladora CKardexDetails");
 		return responseDeleteByIdKardexDetails;
 	}
 
