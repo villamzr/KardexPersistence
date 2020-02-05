@@ -38,7 +38,8 @@ public class CKardexMain
 	/**
 	 * Este método expone el endpoint que obtiene todos los Kardex existentes en la base de datos.
 	 * 
-	 * @return AllKardexMain retorna todos los Kardex Main mappeados en base de datos.
+	 * @return responseAllKardexMain retorna un objeto de tipo responseAllKardexMain que contiene todos los Kardex Main
+	 *         mappeados en base de datos.
 	 **/
 	@GetMapping("/kardex")
 	public ResponseEntity<ResponseAllKardexMain> getAllKardexMain()
@@ -62,7 +63,7 @@ public class CKardexMain
 	 * 
 	 * @param KardexMain
 	 *            Objeto que contiene la información mapeada necesaria para crear un nuevo Kardex.
-	 * @return responseEntity response OK (200) o Server Error (500).
+	 * @return responseSaveKardexMain response OK (200) o Server Error (500).
 	 **/
 	@PostMapping("/kardex")
 	public ResponseEntity<ResponseSaveKardexMain> newKardexMain(@Valid @RequestBody MKardexMain KardexMain)
@@ -137,7 +138,7 @@ public class CKardexMain
 		}
 		catch (Exception e)
 		{
-			ResponsePutKardexMain response = new ResponsePutKardexMain(500, "KardexMain could not updated",
+			ResponsePutKardexMain response = new ResponsePutKardexMain(500, "KardexMain could not be updated",
 					KardexMainId);
 			responsePutKardexMain = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
@@ -158,8 +159,8 @@ public class CKardexMain
 		try
 		{
 			iKardexMainRepository.deleteById(KardexMainId);
-			ResponseDeleteByIdKardexMain response = new ResponseDeleteByIdKardexMain(200,
-					"Kardex deleted successfulluy", KardexMainId);
+			ResponseDeleteByIdKardexMain response = new ResponseDeleteByIdKardexMain(200, "Kardex deleted successfully",
+					KardexMainId);
 			responseDeleteByIdKardexMain = ResponseEntity.status(HttpStatus.OK).body(response);
 		}
 		catch (Exception e)
