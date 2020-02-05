@@ -100,6 +100,7 @@ public class CKardexDetails {
 			log.error("Ha ocurrido un error inesperado. No se pudo crear el nuevo KardexDetail en la base de datos");
 			ResponseNewKardexDetails response = new ResponseNewKardexDetails(500, "KardexDetails could not be created");
 			log.error("Objeto que responde el servicio: "+response);
+			e.printStackTrace();
 			responseNewKardexDetails = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}	
 		log.debug("Saliendo del método newKardexDetails() de la clase controladora CKardexDetails");

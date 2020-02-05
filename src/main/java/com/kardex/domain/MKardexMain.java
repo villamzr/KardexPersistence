@@ -1,41 +1,59 @@
 package com.kardex.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 
-@Entity
+@Entity(name = "KardexMain")
 @Table(name = "KardexMain")
 public class MKardexMain {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="IdKardexMain")
 	private Long id;
+	@OneToMany(targetEntity = MKardexDetails.class)
+	List<MKardexDetails> mKardexDetails = new ArrayList<MKardexDetails>();
 	@NotNull
+	@Column(name="Object")
 	private String object;
 	@NotNull
+	@Column(name="Supplier")
 	private String supplier;
 	@NotNull
+	@Column(name="Reference")
 	private String reference;
 	@NotNull
+	@Column(name="Unit")
 	private String unit;
 	@NotNull
+	@Column(name="Location")
 	private String location;
 	@NotNull
+	@Column(name="Minimum")
 	private int min;
 	@NotNull
+	@Column(name="Maximum")
 	private int max;
 
 	public MKardexMain() {
-		super();
 	}
 
-	public MKardexMain(Long id, String object, String supplier, String reference, String unit, String location,
-			Integer min, Integer max) {
+	public MKardexMain(Long id, List<MKardexDetails> mKardexDetails, @NotNull String object, @NotNull String supplier,
+			@NotNull String reference, @NotNull String unit, @NotNull String location, @NotNull int min,
+			@NotNull int max)
+	{
 		super();
 		this.id = id;
+		this.mKardexDetails = mKardexDetails;
 		this.object = object;
 		this.supplier = supplier;
 		this.reference = reference;
@@ -44,6 +62,8 @@ public class MKardexMain {
 		this.min = min;
 		this.max = max;
 	}
+
+
 
 	public Long getId() {
 		return id;
@@ -107,5 +127,15 @@ public class MKardexMain {
 
 	public void setMax(int max) {
 		this.max = max;
+	}
+
+	public List<MKardexDetails> getmKardexDetails()
+	{
+		return mKardexDetails;
+	}
+
+	public void setmKardexDetails(List<MKardexDetails> mKardexDetails)
+	{
+		this.mKardexDetails = mKardexDetails;
 	}
 }
